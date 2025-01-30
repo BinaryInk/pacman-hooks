@@ -13,22 +13,22 @@ BOLD_ON='\033[1m'
 BOLD_OFF='\033[0m'
 
 echo -e "${BOLD_ON}Setting permissions (655) for script files...${BOLD_OFF}"
-	for file in ${REPOSITORYROOT}/*; do
-    	if [ -f "$file" ]; then
-			case $file in
-				*.sh |\
-				*.ps1 |\
-				*.fish |\
-				*.csh |\
-				*.py )
-					echo $file
-					chmod 655 "$file" -v || {
-						echo "Failed to set permissions on script: '$file'" 1>&2; EXITCODE=1;
-					}
-					;;
-			esac
-		fi
-	done
+for file in ${REPOSITORYROOT}/*; do
+	if [ -f "$file" ]; then
+		case $file in
+			*.sh |\
+			*.ps1 |\
+			*.fish |\
+			*.csh |\
+			*.py )
+				echo $file
+				chmod 655 "$file" -v || {
+					echo "Failed to set permissions on script: '$file'" 1>&2; EXITCODE=1;
+				}
+				;;
+		esac
+	fi
+done
 
 if [ $EXITCODE -ne 0 ]; then
 	# stdout to stderr

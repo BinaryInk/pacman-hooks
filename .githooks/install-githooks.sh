@@ -3,17 +3,14 @@
 # Installs all provided git hooks and scripts in .githooks (except this script)
 
 SCRIPTROOT="$(git rev-parse --show-toplevel)/.githooks"
-
-cd $SCRIPTROOT/..
-
 GITHOOKSPATH="$(git rev-parse --show-toplevel)/.git/hooks"
 
 echo "Installing git hooks..."
 for file in ${SCRIPTROOT}/*; do
     if [ -f "$file" ]; then
         case "$(basename "$file")" in
-            install.githooks.sh)
-                # Skip this file
+            # .sh files to skip
+            install-githooks.sh) 
                 ;;
             applypatch-msg|\
             commit-msg|\
@@ -34,8 +31,7 @@ for file in ${SCRIPTROOT}/*; do
             pre-auto-gc|\
             post-index-change|\
             push-to-checkout|\
-            set-pachookpermissions.sh|\
-            set-pacscriptpermissions.sh)
+            *.sh)
                 dest="${GITHOOKSPATH}/$(basename "$file")"
 
                 cp -fv "$file" "$dest" || echo "Failed to copy '$dest' to $file" 1>&2 

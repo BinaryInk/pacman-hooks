@@ -28,13 +28,17 @@ else
 fi
 
 echo -e "${BOLD_ON}Running pre-commit git hook...${BOLD_OFF}"
-if [ "$skippachookpermfixprecommit" = "true" ] || [ "$skippachookpermfix" = "true" ]; then
-	echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixprecommit or hooks.skippacscriptpermfix is set).'
+if [ "$skippachookpermfixprecommit" = "true" ]; then
+	echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixprecommit).'
+elif [ "$skippachookpermfix" = "true" ]; then
+	echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfix is set).'
 else
 	$GITHOOKROOT/set-pachookpermissions.sh
 fi
-if [ "$skippacscriptpermfixprecommit" = "true" ] || [ "$skippacscriptpermfix" = "true" ]; then
-	echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixprecommit or hooks.skippacscriptpermfix is set).'
+if [ "$skippacscriptpermfixprecommit" = "true" ]; then
+	echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixprecommit).'
+elif [ "$skippacscriptpermfix" = "true" ]; then
+	echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfix is set).'
 else
 	$GITHOOKROOT/set-pacscriptpermissions.sh
 fi

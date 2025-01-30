@@ -29,14 +29,18 @@ else
 fi
 
 echo -e "${BOLD_ON}Running post-merge git hook...${BOLD_OFF}"
-if [ $skippachookpermfixpostmerge = "true" ] || [ $skippachookpermfix = "true" ]; then
-    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixpostmerge or hooks.skippacscriptpermfix is true).'
+if [ $skippachookpermfixpostmerge = "true" ]; then
+    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixpostmerge is true).'
+elif [ $skippachookpermfix = "true" ]; then
+    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfix is true).'
 else
     $GITHOOKROOT/set-pachookpermissions.sh
 fi
 
-if [ $skippacscriptpermfixpostmerge = "true" ] || [ $skippacscriptpermfix = "true" ]; then
-    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixpostmerge or hooks.skippacscriptpermfix is true).'
+if [ $skippacscriptpermfixpostmerge = "true" ]; then
+    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixpostmerge is true).'
+elif [ $skippacscriptpermfix = "true" ]; then
+    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfix is true).'
 else
     $GITHOOKROOT/set-pacscriptpermissions.sh
 fi
