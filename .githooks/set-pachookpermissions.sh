@@ -16,7 +16,7 @@ echo -e "${BOLD_ON}Setting permissions (644) for pacman hooks...${BOLD_OFF}"
 for file in ${REPOSITORYROOT}/*.hook; do
 	if [ -f "$file" ]; then
 		chmod 644 *.hook -v || {
-			echo "Failed to set permissions on hook: '$file'"
+			echo "Failed to set permissions on hook: '$file'" 1>&2; EXITCODE=1;
 		}
 	fi
 done
