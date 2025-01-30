@@ -1,0 +1,42 @@
+#!/usr/bin
+
+GITHOOKROOT="$(git rev-parse --show-toplevel)/.git/hooks"
+GITHOOKINSTALLSCRIPT="$(git rev-parse --show-toplevel)/.githooks/install-githooks.sh"
+# ANSI escape codes for bold text
+BOLD_ON='\033[1m'
+BOLD_OFF='\033[0m'
+
+# Local repo setting for skipping auto-update of githooks
+skipgithookupdate=$(git config --type=bool hooks.skipgithookupdate)
+# Local repo setting for skipping changing pacman hook permissions
+skippachookpermfix=$(git config --type=bool hooks.skippachookpermfix)
+skippachookpermfixpostmerge=$(git config --type=bool hooks.skippachookpermfixpostmerge)
+# Local repo setting for skipping changing pacman script permissions
+skippacscriptpermfix=$(git config --type=bool hooks.skippacscriptpermfix)
+skippacscriptpermfixpostmerge=$(git config --type=bool hooks.skippacscriptpermfixpostmerge)
+
+if [ "$skipgithookupdate" = "true" ]; then
+    echo 'Skipping githook auto-update (hooks.skipgithookupdate is true)'
+elif [ -f "${GITHOOKROOT}/.updated" ]; then
+	rm $GITHOOKROOT/.updated -f
+else
+	echo -e "${BOLD_ON}Updating githooks...${BOLD_OFF}"
+    $GITHOOKINSTALLSCRIPT
+	touch "$GITHOOKROOT/.updated"
+    echo -e "${BOLD_ON}Githooks updated, restarting...${BOLD_OFF}"
+	$GITHOOKROOT/pre-commit
+    exit 0
+fi
+
+echo -e "${BOLD_ON}Running post-merge git hook...${BOLD_OFF}"
+if [ $skippachookpermfixpostmerge = "true" ] || [ $skippachookpermfix = "true" ]; then
+    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixpostmerge or hooks.skippacscriptpermfix is true).'
+else
+    $GITHOOKROOT/set-pachookpermissions.sh
+fi
+
+if [ $skippacscriptpermfixpostmerge = "true" ] || [ $skippacscriptpermfix = "true" ]; then
+    echo 'Skipping changing permissions for script files (hooks.skippacscriptpermfixpostmerge or hooks.skippacscriptpermfix is true).'
+else
+    $GITHOOKROOT/set-pacscriptpermissions.sh
+fi
